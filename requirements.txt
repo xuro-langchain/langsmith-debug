@@ -1,0 +1,6 @@
+bs4
+langchain
+langchain-community
+langchain-openai
+python-dotenv
+weaviate-client
