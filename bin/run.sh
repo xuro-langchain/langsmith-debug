@@ -33,7 +33,9 @@ docker run -it --rm \
  -e N8N_BLOCK_ENV_ACCESS_IN_NODE=false \
  ${N8N_ENCRYPTION_KEY:+-e N8N_ENCRYPTION_KEY="$N8N_ENCRYPTION_KEY"} \
  -v n8n_data:/home/node/.n8n \
- -v "$PROJECT_ROOT/chatbot.json":/workflows/chatbot.json:ro \
+ -v "$PROJECT_ROOT/agents/basic.json":/workflows/basic.json:ro \
+ -v "$PROJECT_ROOT/agents/reflective.json":/workflows/reflective.json:ro \
+ -v "$PROJECT_ROOT/agents/guardrail_reflective.json":/workflows/guardrail_reflective.json:ro \
  -v "$(echo $GENERATED_CREDS_FILES | awk '{print $1}')":/imports/credentials_openai.json:ro \
  -v "$(echo $GENERATED_CREDS_FILES | awk '{print $2}')":/imports/credentials_weaviate.json:ro \
  --entrypoint /bin/sh \
@@ -52,7 +54,9 @@ docker run -it --rm \
      n8n import:credentials --input=/imports/credentials_weaviate.json --decrypted || true
    fi
  fi
- n8n import:workflow --input=/workflows/chatbot.json
+ n8n import:workflow --input=/workflows/basic.json
+ n8n import:workflow --input=/workflows/reflective.json
+ n8n import:workflow --input=/workflows/guardrail_reflective.json
  n8n start'
 
 
