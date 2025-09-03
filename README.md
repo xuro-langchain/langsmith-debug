@@ -1,4 +1,4 @@
-## LangSmith Debug Workshop – Setup and Run
+## LangSmith Workshop - Debugging Agents
 
 ### Prerequisites
 - Docker and Docker Desktop installed and running
