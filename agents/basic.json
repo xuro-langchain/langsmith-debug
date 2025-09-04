@@ -100,7 +100,7 @@
     {
       "parameters": {
         "options": {
-          "systemMessage": "You are a helpful assistant. Use the vector search tool to answer the user's questions about LangGraph and related topics."
+          "systemMessage": "You are a helpful assistant. You MUST use the vector search tool to answer the user's questions. Do not provide any answers that are not grounded in the results from your vector search."
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",

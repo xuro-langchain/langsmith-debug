@@ -7,6 +7,7 @@ PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 docker volume create n8n_data
 
-python3 "$PROJECT_ROOT/db.py"
+python3 "$PROJECT_ROOT/vectorstore.py"
 
+python3 "$PROJECT_ROOT/datasets.py"
 
