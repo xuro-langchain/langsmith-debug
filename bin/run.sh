@@ -34,10 +34,11 @@ docker run -it --rm \
  ${N8N_ENCRYPTION_KEY:+-e N8N_ENCRYPTION_KEY="$N8N_ENCRYPTION_KEY"} \
  -v n8n_data:/home/node/.n8n \
  -v "$PROJECT_ROOT/agents/basic.json":/workflows/basic.json:ro \
- -v "$PROJECT_ROOT/agents/reflective.json":/workflows/reflective.json:ro \
- -v "$PROJECT_ROOT/agents/guardrail_reflective.json":/workflows/guardrail_reflective.json:ro \
+ -v "$PROJECT_ROOT/agents/adaptive.json":/workflows/adaptive.json:ro \
+ -v "$PROJECT_ROOT/agents/guarded_adaptive.json":/workflows/guarded_adaptive.json:ro \
  -v "$(echo $GENERATED_CREDS_FILES | awk '{print $1}')":/imports/credentials_openai.json:ro \
  -v "$(echo $GENERATED_CREDS_FILES | awk '{print $2}')":/imports/credentials_weaviate.json:ro \
+ -v "$(echo $GENERATED_CREDS_FILES | awk '{print $3}')":/imports/credentials_tavily.json:ro \
  --entrypoint /bin/sh \
  n8nio/n8n -c '
  set -e
@@ -46,6 +47,7 @@ docker run -it --rm \
    echo "Warning: could not list credentials; proceeding to import"
    n8n import:credentials --input=/imports/credentials_openai.json --decrypted || true
    n8n import:credentials --input=/imports/credentials_weaviate.json --decrypted || true
+   n8n import:credentials --input=/imports/credentials_tavily.json --decrypted || true
  else
    if ! grep -q "OpenAi Account" /tmp/_creds.json; then
      n8n import:credentials --input=/imports/credentials_openai.json --decrypted || true
@@ -53,10 +55,13 @@ docker run -it --rm \
    if ! grep -q "Weaviate Credentials Account" /tmp/_creds.json; then
      n8n import:credentials --input=/imports/credentials_weaviate.json --decrypted || true
    fi
+   if [ -f /imports/credentials_tavily.json ] && ! grep -q "Tavily Account" /tmp/_creds.json; then
+     n8n import:credentials --input=/imports/credentials_tavily.json --decrypted || true
+   fi
  fi
  n8n import:workflow --input=/workflows/basic.json
- n8n import:workflow --input=/workflows/reflective.json
- n8n import:workflow --input=/workflows/guardrail_reflective.json
+ n8n import:workflow --input=/workflows/adaptive.json
+ n8n import:workflow --input=/workflows/guarded_adaptive.json
  n8n start'
 
 
